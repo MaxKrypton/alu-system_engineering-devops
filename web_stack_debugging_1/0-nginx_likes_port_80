@@ -1,20 +1,8 @@
 #!/usr/bin/env bash
-# Checking if nginx is installed
-sudo nginx -v
 
-# Checking if nginx is running on port 80
-sudo ss -tuln | grep ':80'
-
-# Checking errors in nginx error log
-sudo cat /var/log/nginx/error.log
-
-# Found that it is set to port 8080. Changing it to port 80 in sites-available/default
-sudo sed -i 's/listen 8080 default_server;/listen 80 default_server;/' /etc/nginx/sites-available/default
-sudo sed -i 's/listen [::]:8080 default_server ipv6only=on;/listen [::]:80 default_server ipv6only=on;/' /etc/nginx/sites-available/default
-
-# Found that it is set to port 8080, changing it to port 80 in sites-enabled/default
-sudo sed -i 's/listen 8080 default_server;/listen 80 default_server;/' /etc/nginx/sites-enabled/default
-sudo sed -i 's/listen [::]:8080 default_server ipv6only=on;/listen [::]:80 default_server ipv6only=on;/' /etc/nginx/sites-enabled/default
-
+# remove the default nginx configurations
+rm /etc/nginx/sites-enabled/default
+# config nginx to listen to port 80 for all active IPv4 IPs
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 # Restarting nginxs
 sudo service nginx restart
